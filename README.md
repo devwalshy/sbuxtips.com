@@ -62,7 +62,7 @@ npm run build
 ```
 
 The build command emits a `dist/` directory with an SPA-friendly `404.html` fallback and Vite base path set
-to `/sbuxtips.com/` for GitHub Pages. The GitHub Actions workflow will automatically deploy on every push to `main`.
+to `/` for GitHub Pages. The GitHub Actions workflow will automatically deploy on every push to `main`.
 
 ## OCR Microservice
 
