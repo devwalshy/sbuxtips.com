@@ -47,6 +47,10 @@ jobs:
         env:
           VITE_BASE: ${{ steps.base.outputs.base }}
           NODE_ENV: production
+          OCR_ENGINE: ${{ secrets.OCR_ENGINE }}
+          AZURE_DI_KEY: ${{ secrets.AZURE_DI_KEY }}
+          AZURE_DI_ENDPOINT: ${{ secrets.AZURE_DI_ENDPOINT }}
+          SESSION_SECRET: ${{ secrets.SESSION_SECRET }}
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
