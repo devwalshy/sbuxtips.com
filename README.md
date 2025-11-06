@@ -38,9 +38,22 @@ npm install
 npm run dev
 ```
 
-The SPA expects an OCR endpoint URL in `VITE_OCR_SERVICE_URL`. Copy `.env.example` to `.env` and adjust as
-needed. When deploying to GitHub Pages, remember to update the environment variable to your hosted OCR
-service URL.
+Copy `.env.example` to `.env` and adjust as needed. `OCR_ENGINE=auto` will use Azure when credentials are
+present and otherwise fall back to the bundled OCR microservice at `http://localhost:8000/ocr`. If you need
+to point at a different self-hosted endpoint, export `OCR_SERVICE_URL` in your shell or deployment
+environment.
+
+### Using Azure Document Intelligence
+
+If you prefer Azure Document Intelligence instead of the self-hosted service:
+
+1. Set `OCR_ENGINE=azure` (or leave `auto` with valid credentials).
+2. Provide `AZURE_DI_ENDPOINT` (for example `https://your-resource.cognitiveservices.azure.com/`).
+3. Provide `AZURE_DI_KEY` with a valid key from your Azure resource.
+4. Optionally set `AZURE_DI_MODEL_ID` (defaults to `prebuilt-layout`) and `AZURE_DI_API_VERSION`.
+
+Azure keys grant full access to your resource. Keep them out of source control and avoid embedding them in
+public builds; route requests through a trusted backend when possible.
 
 ### Build for GitHub Pages
 
@@ -49,8 +62,7 @@ npm run build
 ```
 
 The build command emits a `dist/` directory with an SPA-friendly `404.html` fallback and Vite base path set
-to `/tipjar/` for GitHub Pages. Push the `dist/` directory to the `gh-pages` branch or use an action of your
-choice.
+to `/sbuxtips.com/` for GitHub Pages. The GitHub Actions workflow will automatically deploy on every push to `main`.
 
 ## OCR Microservice
 
@@ -88,7 +100,8 @@ docker run -it --rm -p 8000:8000 tipjar-ocr
 3. Ensure the service exposes port `8000`.
 4. Deploy – both providers automatically build using the provided Dockerfile.
 
-Once deployed, set the frontend `VITE_OCR_SERVICE_URL` to the hosted URL (e.g. `https://your-app.up.railway.app/ocr`).
+Once deployed, set `OCR_ENGINE=service` and export `OCR_SERVICE_URL` with the hosted URL (e.g.
+`https://your-app.up.railway.app/ocr`).
 
 ## Tip Calculation Details
 

@@ -15,8 +15,9 @@ import { PartnerCard } from './components/PartnerCard';
 const DEFAULT_TIPS = 500;
 
 function useOcrEndpoint() {
-  const endpoint = import.meta.env.VITE_OCR_SERVICE_URL || 'http://localhost:8000/ocr';
-  return endpoint;
+  const env = import.meta.env as Record<string, unknown>;
+  const raw = typeof env.OCR_SERVICE_URL === 'string' ? env.OCR_SERVICE_URL.trim() : '';
+  return raw || 'http://localhost:8000/ocr';
 }
 
 export default function App() {
