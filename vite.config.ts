@@ -1,9 +1,9 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 
-// For GitHub Pages: use environment variable or default to repo name
+// For GitHub Pages: use environment variable or default to root
 // If repo is username.github.io, base should be '/', otherwise '/repo-name/'
-const base = process.env.VITE_BASE || '/sbuxtips.com/';
+const base = process.env.VITE_BASE || '/';
 
 export default defineConfig({
   plugins: [react()],
