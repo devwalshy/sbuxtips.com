@@ -3,6 +3,12 @@
 TipJar is a GitHub Pages–ready Vite + React + Tailwind single-page application that helps teams distribute
 pooled tips based on partner hours. Upload a schedule image, review the OCR results, and instantly view
 transparent payouts with bill breakdowns – all from a static site.
+# TipJar – Tip Distribution Web App with Self-Hosted OCR
+
+TipJar is a two-part solution for automatically distributing pooled tips based on partner hours extracted
+from schedule images. The frontend is a Vite + React + Tailwind SPA that can be deployed to GitHub Pages,
+while the backend is a FastAPI microservice powered by PaddleOCR that you can run anywhere Docker is
+available.
 
 ## Features
 
@@ -12,6 +18,7 @@ transparent payouts with bill breakdowns – all from a static site.
 - 💵 **Bill denomination helper** – Break payouts into $20, $5, and $1 bills for quick cash-outs.
 - 📊 **Confidence reporting** – Surface OCR confidence to help verify extracted data.
 - 🚀 **Deploy to GitHub Pages** – Everything you need to host the SPA from a GitHub repository.
+- 🚀 **Deploy anywhere** – Static frontend for GitHub Pages and Docker-ready OCR microservice.
 
 ## Repository Structure
 
@@ -24,6 +31,10 @@ transparent payouts with bill breakdowns – all from a static site.
 │   ├── components/
 │   ├── lib/
 │   └── style.css
+└── ocr_service/      # FastAPI + PaddleOCR backend
+    ├── main.py
+    ├── Dockerfile
+    └── requirements.txt
 ```
 
 ## Frontend Setup
@@ -36,6 +47,8 @@ npm run dev
 The SPA expects an OCR endpoint URL in `VITE_OCR_SERVICE_URL`. Copy `.env.example` to `.env` and adjust as
 needed. When deploying to GitHub Pages, point this value at any publicly reachable OCR service you control
 or trust.
+needed. When deploying to GitHub Pages, remember to update the environment variable to your hosted OCR
+service URL.
 
 ### Build for GitHub Pages
 
@@ -53,6 +66,16 @@ directory to the `gh-pages` branch or use a GitHub Action of your choice.
 TipJar expects an OCR API that follows the shape documented below. You can deploy any compatible service –
 for example, a PaddleOCR FastAPI wrapper – and host it separately from GitHub Pages. Point
 `VITE_OCR_SERVICE_URL` at the `/ocr` endpoint of that service.
+The build command emits a `dist/` directory with an SPA-friendly `404.html` fallback and Vite base path set
+to `/tipjar/` for GitHub Pages. Push the `dist/` directory to the `gh-pages` branch or use an action of your
+choice.
+
+## OCR Microservice
+
+The FastAPI app lives in `ocr_service/main.py` and exposes:
+
+- `GET /healthz` – basic health check returning `{ "status": "ok" }`.
+- `POST /ocr` – accepts a multipart image upload and returns OCR results.
 
 Example response:
 
@@ -67,6 +90,23 @@ Example response:
   "confidence": { "average": 0.93 }
 }
 ```
+
+### Run Locally with Docker
+
+```bash
+cd ocr_service
+docker build -t tipjar-ocr .
+docker run -it --rm -p 8000:8000 tipjar-ocr
+```
+
+### Railway or Render Deployment
+
+1. Create a new **Docker** deployment.
+2. Connect this repository or upload the contents of `ocr_service/`.
+3. Ensure the service exposes port `8000`.
+4. Deploy – both providers automatically build using the provided Dockerfile.
+
+Once deployed, set the frontend `VITE_OCR_SERVICE_URL` to the hosted URL (e.g. `https://your-app.up.railway.app/ocr`).
 
 ## Tip Calculation Details
 
