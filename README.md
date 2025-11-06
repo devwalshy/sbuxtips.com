@@ -1,3 +1,8 @@
+# TipJar – Tip Distribution Web App for GitHub Pages
+
+TipJar is a GitHub Pages–ready Vite + React + Tailwind single-page application that helps teams distribute
+pooled tips based on partner hours. Upload a schedule image, review the OCR results, and instantly view
+transparent payouts with bill breakdowns – all from a static site.
 # TipJar – Tip Distribution Web App with Self-Hosted OCR
 
 TipJar is a two-part solution for automatically distributing pooled tips based on partner hours extracted
@@ -12,6 +17,7 @@ available.
 - 💸 **Transparent tip distribution** – Automatic hourly rate calculation and partner payouts.
 - 💵 **Bill denomination helper** – Break payouts into $20, $5, and $1 bills for quick cash-outs.
 - 📊 **Confidence reporting** – Surface OCR confidence to help verify extracted data.
+- 🚀 **Deploy to GitHub Pages** – Everything you need to host the SPA from a GitHub repository.
 - 🚀 **Deploy anywhere** – Static frontend for GitHub Pages and Docker-ready OCR microservice.
 
 ## Repository Structure
@@ -39,6 +45,8 @@ npm run dev
 ```
 
 The SPA expects an OCR endpoint URL in `VITE_OCR_SERVICE_URL`. Copy `.env.example` to `.env` and adjust as
+needed. When deploying to GitHub Pages, point this value at any publicly reachable OCR service you control
+or trust.
 needed. When deploying to GitHub Pages, remember to update the environment variable to your hosted OCR
 service URL.
 
@@ -48,6 +56,16 @@ service URL.
 npm run build
 ```
 
+The build command emits a `dist/` directory with an SPA-friendly `404.html` fallback. Push the `dist/`
+directory to the `gh-pages` branch or use a GitHub Action of your choice.
+
+> **Note:** GitHub Pages serves the site from the repository root, so the Vite base path is configured as `/`.
+
+## OCR Endpoint
+
+TipJar expects an OCR API that follows the shape documented below. You can deploy any compatible service –
+for example, a PaddleOCR FastAPI wrapper – and host it separately from GitHub Pages. Point
+`VITE_OCR_SERVICE_URL` at the `/ocr` endpoint of that service.
 The build command emits a `dist/` directory with an SPA-friendly `404.html` fallback and Vite base path set
 to `/tipjar/` for GitHub Pages. Push the `dist/` directory to the `gh-pages` branch or use an action of your
 choice.
